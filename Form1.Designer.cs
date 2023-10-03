@@ -37,7 +37,10 @@
             SingleVideoLengthValue_Tb = new TextBox();
             SingleVideoLength_Lb = new Label();
             VideoLength_Tm = new System.Windows.Forms.Timer(components);
+            statusStrip1 = new StatusStrip();
+            TimeOfDay_Sts = new ToolStripStatusLabel();
             groupBox1.SuspendLayout();
+            statusStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // RecordStopVideo_Bt
@@ -125,23 +128,44 @@
             VideoLength_Tm.Interval = 1000;
             VideoLength_Tm.Tick += VideoLength_Tm_Tick;
             // 
+            // statusStrip1
+            // 
+            statusStrip1.Items.AddRange(new ToolStripItem[] { TimeOfDay_Sts });
+            statusStrip1.Location = new Point(0, 121);
+            statusStrip1.Name = "statusStrip1";
+            statusStrip1.Size = new Size(516, 26);
+            statusStrip1.TabIndex = 85;
+            statusStrip1.Text = "statusStrip1";
+            // 
+            // TimeOfDay_Sts
+            // 
+            TimeOfDay_Sts.BackColor = SystemColors.Control;
+            TimeOfDay_Sts.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            TimeOfDay_Sts.Name = "TimeOfDay_Sts";
+            TimeOfDay_Sts.Size = new Size(115, 21);
+            TimeOfDay_Sts.Text = " Time: 21:54:12";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.AppWorkspace;
-            ClientSize = new Size(516, 121);
+            ClientSize = new Size(516, 147);
+            Controls.Add(statusStrip1);
             Controls.Add(groupBox1);
             Controls.Add(TotalLengthValue_Lb);
             Controls.Add(label4);
             Controls.Add(RecordStopVideo_Bt);
             Name = "Form1";
-            Text = "Kingdom Video Recorder v1.00";
+            Text = "Kingdom Video Recorder v1.01";
             FormClosing += Form1_FormClosing;
             Load += Form1_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            statusStrip1.ResumeLayout(false);
+            statusStrip1.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -154,5 +178,7 @@
         private TextBox SingleVideoLengthValue_Tb;
         private Label SingleVideoLength_Lb;
         private System.Windows.Forms.Timer VideoLength_Tm;
+        private StatusStrip statusStrip1;
+        private ToolStripStatusLabel TimeOfDay_Sts;
     }
 }

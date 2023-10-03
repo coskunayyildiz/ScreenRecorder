@@ -32,6 +32,10 @@ namespace ScreenVideoRecorder
             {
                 Directory.CreateDirectory(folderPath);
             }
+
+            DateTime currentTime = DateTime.Now;
+            string formattedTime = "Time: " + currentTime.ToString("HH:mm:ss");
+            TimeOfDay_Sts.Text = formattedTime;
         }
 
         private void RecordStopVideo_Bt_Click(object sender, EventArgs e)
@@ -56,6 +60,7 @@ namespace ScreenVideoRecorder
                 SingleVideoLength_Lb.Enabled = true;
                 SingleVideoLengthValue_Tb.Enabled = true;
                 VideoLength_Tm.Stop();
+                recorded_video_seconds = 0;
             }
 
         }
@@ -88,7 +93,8 @@ namespace ScreenVideoRecorder
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             record_requested = false;
-            DesktopRecorderThread.Join();
+            if ((DesktopRecorderThread != null) && (DesktopRecorderThread.IsAlive))
+                DesktopRecorderThread.Join();
         }
 
         private void VideoLength_Tm_Tick(object sender, EventArgs e)
@@ -99,6 +105,10 @@ namespace ScreenVideoRecorder
             int minute = (recorded_video_seconds - (hour * 3600)) / 60;
             int seconds = (recorded_video_seconds - (hour * 3600) - (minute * 60));
             TotalLengthValue_Lb.Text = hour.ToString("00") + ":" + minute.ToString("00") + ":" + seconds.ToString("00");
+
+            DateTime currentTime = DateTime.Now;
+            string formattedTime = "Time: " + currentTime.ToString("HH:mm:ss");
+            TimeOfDay_Sts.Text = formattedTime;
         }
     }
 }
