@@ -25,6 +25,20 @@ namespace ScreenVideoRecorder
             InitializeComponent();
         }
 
+        public static string GenerateVideoName()
+        {
+            DateTime currentTime = DateTime.Now;
+            string current_date = currentTime.ToString("ddMMyyyy");
+            string current_time = currentTime.ToString("HH_mm_ss");
+            string folderPath = "Videos/" + current_date;
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            return (folderPath + "/" + current_time + ".avi");
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             string folderPath = @"Videos";
@@ -42,7 +56,7 @@ namespace ScreenVideoRecorder
         {
             if (RecordStopVideo_Bt.Text.Equals("Start Recording"))
             {
-                recorder = new Recorder(new RecorderParams("Videos/video_1.avi", 10, CodecIds.MotionJpeg, 50));
+                recorder = new Recorder(new RecorderParams(GenerateVideoName(), 10, CodecIds.MotionJpeg, 50));
 
                 DesktopRecorderThread = new Thread(new ThreadStart(RecordDesktop));
                 DesktopRecorderThread.Start();
@@ -80,7 +94,7 @@ namespace ScreenVideoRecorder
                     recorder.Dispose();
                     int video_num = recorded_video_seconds / (single_video_minute_length * 60) + 1;
                     string video_name = "Videos/video_" + video_num.ToString() + ".avi";
-                    recorder = new Recorder(new RecorderParams(video_name, 10, CodecIds.MotionJpeg, 50));
+                    recorder = new Recorder(new RecorderParams(GenerateVideoName(), 10, CodecIds.MotionJpeg, 50));
                     video_segment_created = true;
                 }
                 if ((recorded_video_seconds % (single_video_minute_length * 60) != 0))

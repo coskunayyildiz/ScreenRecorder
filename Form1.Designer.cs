@@ -157,7 +157,7 @@
             Controls.Add(label4);
             Controls.Add(RecordStopVideo_Bt);
             Name = "Form1";
-            Text = "Kingdom Video Recorder v1.01";
+            Text = "Kingdom Video Recorder v1.02";
             FormClosing += Form1_FormClosing;
             Load += Form1_Load;
             groupBox1.ResumeLayout(false);
