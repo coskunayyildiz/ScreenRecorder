@@ -2,9 +2,11 @@
 namespace ScreenVideoRecorder
 {
     using System;
+    using System.Diagnostics;
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
+    using System.Reflection.Metadata;
     using System.Windows;
     using SharpAvi;
     using SharpAvi.Codecs;
@@ -20,6 +22,9 @@ namespace ScreenVideoRecorder
         public static int single_video_minute_length = 0;
         public static bool video_segment_created = false;
 
+        public static string last_video_folder = "";
+        public static string last_video_name = "";
+
         public Form1()
         {
             InitializeComponent();
@@ -31,11 +36,20 @@ namespace ScreenVideoRecorder
             string current_date = currentTime.ToString("ddMMyyyy");
             string current_time = currentTime.ToString("HH_mm_ss");
             string folderPath = "Videos/" + current_date;
+
+            /*if(last_video_folder != "" && last_video_name != "")
+            {
+                RunABatchFileForSingle();
+            }*/
+
+            last_video_folder = folderPath;
+
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
             }
 
+            last_video_name = current_time + ".avi";
             return (folderPath + "/" + current_time + ".avi");
         }
 
@@ -50,6 +64,55 @@ namespace ScreenVideoRecorder
             DateTime currentTime = DateTime.Now;
             string formattedTime = "Time: " + currentTime.ToString("HH:mm:ss");
             TimeOfDay_Sts.Text = formattedTime;
+        }
+
+        public static void RunABatchFileForSingle()
+        {
+            try
+            {
+                // Create a ProcessStartInfo to specify the batch file to run
+                ProcessStartInfo processStartInfo = new ProcessStartInfo("decrease_size_single.bat");
+                processStartInfo.Arguments = last_video_folder;
+                processStartInfo.Arguments = $"{last_video_folder} {last_video_name}";
+
+                //Environment.CurrentDirectory = last_video_folder;
+
+                // Create a new process and start it
+                Process process = new Process();
+                process.StartInfo = processStartInfo;
+                process.Start();
+
+                // Wait for the batch file to finish running
+                process.WaitForExit();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}");
+            }
+        }
+
+        public static void RunABatchFile()
+        {
+            try
+            {
+                // Create a ProcessStartInfo to specify the batch file to run
+                ProcessStartInfo processStartInfo = new ProcessStartInfo("decrease_size.bat");
+                processStartInfo.Arguments = last_video_folder;
+
+                //Environment.CurrentDirectory = last_video_folder;
+
+                // Create a new process and start it
+                Process process = new Process();
+                process.StartInfo = processStartInfo;
+                process.Start();
+
+                // Wait for the batch file to finish running
+                process.WaitForExit();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}");
+            }
         }
 
         private void RecordStopVideo_Bt_Click(object sender, EventArgs e)
@@ -75,6 +138,7 @@ namespace ScreenVideoRecorder
                 SingleVideoLengthValue_Tb.Enabled = true;
                 VideoLength_Tm.Stop();
                 recorded_video_seconds = 0;
+                RunABatchFile();
             }
 
         }
@@ -89,11 +153,9 @@ namespace ScreenVideoRecorder
                     recorder.Dispose();
                     break;
                 }
-                if ((recorded_video_seconds % (single_video_minute_length * 60) == 0) && !video_segment_created)
+                if ( (recorded_video_seconds != 0) && (recorded_video_seconds % (single_video_minute_length * 60) == 0) && !video_segment_created)
                 {
                     recorder.Dispose();
-                    int video_num = recorded_video_seconds / (single_video_minute_length * 60) + 1;
-                    string video_name = "Videos/video_" + video_num.ToString() + ".avi";
                     recorder = new Recorder(new RecorderParams(GenerateVideoName(), 10, CodecIds.MotionJpeg, 50));
                     video_segment_created = true;
                 }
