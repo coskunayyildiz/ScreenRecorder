@@ -153,7 +153,7 @@ namespace ScreenVideoRecorder
                     recorder.Dispose();
                     break;
                 }
-                if ( (recorded_video_seconds != 0) && (recorded_video_seconds % (single_video_minute_length * 60) == 0) && !video_segment_created)
+                if ((recorded_video_seconds != 0) && (recorded_video_seconds % (single_video_minute_length * 60) == 0) && !video_segment_created)
                 {
                     recorder.Dispose();
                     recorder = new Recorder(new RecorderParams(GenerateVideoName(), 10, CodecIds.MotionJpeg, 50));
