@@ -25,6 +25,10 @@ namespace ScreenVideoRecorder
         public static string last_video_folder = "";
         public static string last_video_name = "";
 
+        public static bool video_decrease_requested = false;
+        public static string video_decrease_folder = "";
+        public static string video_decrease_video_name = "";
+
         public Form1()
         {
             InitializeComponent();
@@ -64,6 +68,8 @@ namespace ScreenVideoRecorder
             DateTime currentTime = DateTime.Now;
             string formattedTime = "Time: " + currentTime.ToString("HH:mm:ss");
             TimeOfDay_Sts.Text = formattedTime;
+
+            VideoDecrease_Tm.Start();
         }
 
         public static void RunABatchFileForSingle()
@@ -72,8 +78,7 @@ namespace ScreenVideoRecorder
             {
                 // Create a ProcessStartInfo to specify the batch file to run
                 ProcessStartInfo processStartInfo = new ProcessStartInfo("decrease_size_single.bat");
-                processStartInfo.Arguments = last_video_folder;
-                processStartInfo.Arguments = $"{last_video_folder} {last_video_name}";
+                processStartInfo.Arguments = $"{video_decrease_folder} {video_decrease_video_name}";
 
                 //Environment.CurrentDirectory = last_video_folder;
 
@@ -138,7 +143,10 @@ namespace ScreenVideoRecorder
                 SingleVideoLengthValue_Tb.Enabled = true;
                 VideoLength_Tm.Stop();
                 recorded_video_seconds = 0;
-                RunABatchFile();
+
+                video_decrease_requested = true;
+                video_decrease_folder = last_video_folder;
+                video_decrease_video_name = last_video_name;
             }
 
         }
@@ -156,6 +164,11 @@ namespace ScreenVideoRecorder
                 if ((recorded_video_seconds != 0) && (recorded_video_seconds % (single_video_minute_length * 60) == 0) && !video_segment_created)
                 {
                     recorder.Dispose();
+
+                    video_decrease_requested = true;
+                    video_decrease_folder = last_video_folder;
+                    video_decrease_video_name = last_video_name;
+
                     recorder = new Recorder(new RecorderParams(GenerateVideoName(), 10, CodecIds.MotionJpeg, 50));
                     video_segment_created = true;
                 }
@@ -185,6 +198,17 @@ namespace ScreenVideoRecorder
             DateTime currentTime = DateTime.Now;
             string formattedTime = "Time: " + currentTime.ToString("HH:mm:ss");
             TimeOfDay_Sts.Text = formattedTime;
+        }
+
+        private void VideoDecrease_Tm_Tick(object sender, EventArgs e)
+        {
+            if (video_decrease_requested)
+            {
+                RunABatchFileForSingle();
+                video_decrease_requested = false;
+                video_decrease_folder = "";
+                video_decrease_video_name = "";
+            }
         }
     }
 }

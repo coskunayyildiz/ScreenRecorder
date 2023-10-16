@@ -39,6 +39,7 @@
             VideoLength_Tm = new System.Windows.Forms.Timer(components);
             statusStrip1 = new StatusStrip();
             TimeOfDay_Sts = new ToolStripStatusLabel();
+            VideoDecrease_Tm = new System.Windows.Forms.Timer(components);
             groupBox1.SuspendLayout();
             statusStrip1.SuspendLayout();
             SuspendLayout();
@@ -107,7 +108,7 @@
             SingleVideoLengthValue_Tb.Name = "SingleVideoLengthValue_Tb";
             SingleVideoLengthValue_Tb.Size = new Size(44, 23);
             SingleVideoLengthValue_Tb.TabIndex = 83;
-            SingleVideoLengthValue_Tb.Text = "1";
+            SingleVideoLengthValue_Tb.Text = "20";
             SingleVideoLengthValue_Tb.TextAlign = HorizontalAlignment.Center;
             // 
             // SingleVideoLength_Lb
@@ -145,6 +146,11 @@
             TimeOfDay_Sts.Size = new Size(115, 21);
             TimeOfDay_Sts.Text = " Time: 21:54:12";
             // 
+            // VideoDecrease_Tm
+            // 
+            VideoDecrease_Tm.Interval = 1000;
+            VideoDecrease_Tm.Tick += VideoDecrease_Tm_Tick;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -157,7 +163,7 @@
             Controls.Add(label4);
             Controls.Add(RecordStopVideo_Bt);
             Name = "Form1";
-            Text = "Kingdom Video Recorder v1.03";
+            Text = "Kingdom Video Recorder v2.00";
             FormClosing += Form1_FormClosing;
             Load += Form1_Load;
             groupBox1.ResumeLayout(false);
@@ -180,5 +186,6 @@
         private System.Windows.Forms.Timer VideoLength_Tm;
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel TimeOfDay_Sts;
+        private System.Windows.Forms.Timer VideoDecrease_Tm;
     }
 }
