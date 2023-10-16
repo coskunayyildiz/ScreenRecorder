@@ -12,11 +12,9 @@ if not exist "%output_folder%" (
     mkdir "%output_folder%"
 )
 
-    echo Processing %video_name%
-    
-    :: Use FFmpeg to compress the video and save it in the output folder
-    "%ffmpeg_path%" -i %input_folder%\%video_name% -c:v libx264 -crf 18 -c:a aac -strict experimental -b:a 128k %output_folder%\%video_name%
-    
-    echo %video_name%.avi compressed and saved as %video_name%.avi"
+echo Processing %video_name%
 
-    del %input_folder%\%video_name%
+    :: Use FFmpeg to compress the video and save it in the output folder
+"%ffmpeg_path%" -i "%input_folder%/%video_name%" -c:v libx264 -crf 18 -c:a aac -strict experimental -b:a 128k %output_folder%/%video_name%
+
+del "%input_folder%\%video_name%"
